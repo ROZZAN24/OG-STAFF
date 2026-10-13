@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate Staff ID — OG STAFF (RSA-2048)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- JsBarcode for Code 128 -->
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">OG</div>
+        <div class="brand-text">OG <span>STAFF</span></div>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="generate.html" class="active">Generate</a></li>
+          <li><a href="verify.html">Verify</a></li>
+          <li><a href="demo.html">Security Demo</a></li>
+          <li><a href="about.html">About & Viva</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Generate Staff ID Card</h1>
+      <p class="page-subtitle">
+        Sign institutional employee records with hardware-grade RSA-2048 digital signatures and create Code 128 barcode identity cards.
+      </p>
+    </div>
+
+    <!-- Security Warning Banner (Requirement 3.8) -->
+    <div class="security-warning-banner">
+      <span class="security-warning-icon">⚠</span>
+      <div>
+        <strong>Educational demo only:</strong> This application stores the private signing key in your browser's LocalStorage. Anyone with physical access to this browser profile or storage may be able to extract it. Production identity systems must protect signing keys using a secure server, an HSM (Hardware Security Module), or a dedicated KMS.
+      </div>
+    </div>
+
+    <!-- 1. Key Management Panel -->
+    <section class="card key-panel">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1rem;">
+        <h2 class="card-title" style="margin-bottom: 0;">
+          <span>🔑</span> Institutional RSA Key Pair Management
+        </h2>
+        <div id="key-status-badge" class="badge badge-warning">CHECKING KEYS...</div>
+      </div>
+
+      <p id="key-status-message" class="card-subtitle">
+        Checking browser LocalStorage for active cryptographic signing keys...
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--cyan-border); margin-bottom: 1.25rem;">
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Algorithm</span>
+          <div style="font-weight: 700; color: var(--cyan-accent); font-size: 0.95rem;">RSASSA-PKCS1-v1_5</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Modulus Length</span>
+          <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">2048 bits (e = 65537)</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Hash Function</span>
+          <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">SHA-256 (256-bit digest)</div>
+        </div>
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Public Key Fingerprint (SPKI SHA-256)</span>
+          <div id="key-fingerprint-display" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--color-success); font-weight: 700;">—</div>
+        </div>
+      </div>
+
+      <!-- Key Action Buttons -->
+      <div class="btn-group">
+        <button id="btn-generate-keys" class="btn btn-primary">
+          ⚡ Generate New Key Pair
+        </button>
+        <button id="btn-export-pub" class="btn btn-secondary" disabled>
+          ⬇ Export Public Key (JWK)
+        </button>
+        <button id="btn-export-priv" class="btn btn-secondary" disabled>
+          ⬇ Export Private Key (JWK)
+        </button>
+        <button id="btn-import-keys" class="btn btn-secondary">
+          ⬆ Import Key File
+        </button>
+        <input type="file" id="import-file-input" accept=".json" style="display: none;">
+        <button id="btn-clear-keys" class="btn btn-danger">
+          🗑 Clear Stored Keys
+        </button>
+      </div>
+    </section>
+
+    <!-- 2. Staff Details Form -->
+    <div class="grid-2">
+      <section class="card form-panel">
+        <h2 class="card-title">
+          <span>📝</span> Staff Information
+        </h2>
+        <p class="card-subtitle">
+          All canonical fields are strictly formatted into UTF-8 JSON prior to cryptographic signing.
+        </p>
+
+        <form id="staff-form">
+          <div class="form-group">
+            <label class="form-label" for="staff-id">Staff ID <span class="required">*</span></label>
+            <input type="text" id="staff-id" class="form-control" placeholder="e.g. STF-2026-881" value="STF-2026-881" required>
+            <div class="form-hint">Supported characters: alphanumeric and hyphens</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="staff-name">Staff Full Name <span class="required">*</span></label>
+            <input type="text" id="staff-name" class="form-control" placeholder="e.g. Dr. Priya Sharma" value="Dr. Priya Sharma" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="staff-dept">Department <span class="required">*</span></label>
+            <input type="text" id="staff-dept" class="form-control" placeholder="e.g. Cybersecurity & Networks" value="Cybersecurity & Networks" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="staff-designation">Designation <span class="required">*</span></label>
+            <input type="text" id="staff-designation" class="form-control" placeholder="e.g. Associate Professor" value="Associate Professor" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="staff-institution">Institution / College Name <span class="required">*</span></label>
+            <input type="text" id="staff-institution" class="form-control" placeholder="e.g. Apex Institute of Technology" value="Apex Institute of Technology" required>
+          </div>
+
+          <div class="grid-2" style="gap: 1rem; margin-bottom: 0;">
+            <div class="form-group">
+              <label class="form-label" for="staff-joining">Date of Joining <span class="required">*</span></label>
+              <input type="date" id="staff-joining" class="form-control" value="2025-06-01" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="staff-valid">Valid Until (Expiration Date) <span class="required">*</span></label>
+              <input type="date" id="staff-valid" class="form-control" value="2028-06-01" required>
+            </div>
+          </div>
+
+          <!-- Photo Upload (Excluded from signature) -->
+          <div class="form-group" style="padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px dashed var(--cyan-border);">
+            <label class="form-label">
+              Staff Photo (Optional &bull; Visual Display Only)
+            </label>
+            <div style="display: flex; align-items: center; gap: 1rem; margin-top: 0.5rem;">
+              <div style="width: 54px; height: 54px; border-radius: 6px; overflow: hidden; border: 1px solid var(--cyan-accent); flex-shrink: 0; background: #000;">
+                <img id="photo-preview-img" src="assets/placeholder-avatar.svg" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">
+              </div>
+              <div style="flex: 1;">
+                <input type="file" id="staff-photo-input" accept="image/png, image/jpeg, image/webp" class="form-control" style="font-size: 0.8rem; padding: 0.4rem;">
+                <button type="button" id="btn-remove-photo" class="btn btn-secondary btn-sm" style="margin-top: 0.4rem;">Reset to Default Avatar</button>
+              </div>
+            </div>
+            <div class="form-hint" style="color: #ffb300; margin-top: 0.5rem;">
+              ⚠ Security Note: The photo is for display only and is excluded from the canonical digital signature payload.
+            </div>
+          </div>
+
+          <button type="submit" id="btn-submit-generate" class="btn btn-primary btn-block" style="font-size: 1.05rem; padding: 0.85rem;">
+            🪪 Generate ID Card with RSA Signature
+          </button>
+        </form>
+      </section>
+
+      <!-- ID Card Output Preview -->
+      <section id="card-output-section" class="card" style="display: none;">
+        <h2 class="card-title">
+          <span>🪪</span> Generated Identity Card
+        </h2>
+        <p class="card-subtitle">
+          Ready for laboratory verification, high-resolution PNG export, or printing.
+        </p>
+
+        <div class="id-card-preview-wrapper">
+          <!-- Printable card DOM -->
+          <div id="printable-card-container">
+            <div id="id-card-element" class="id-card">
+              <!-- Header -->
+              <div class="id-card-header">
+                <div id="card-inst-display" class="id-card-inst-title">APEX INSTITUTE OF TECHNOLOGY</div>
+                <div class="id-card-badge-sub">Staff Identity Card &bull; OG STAFF | RSA-2048 Verified</div>
+              </div>
+
+              <!-- Body -->
+              <div class="id-card-body">
+                <div class="id-card-photo-box">
+                  <img id="card-photo-img" src="assets/placeholder-avatar.svg" alt="Staff Photo">
+                </div>
+
+                <div id="card-name-display" class="id-card-name">Dr. Priya Sharma</div>
+                <div id="card-desig-display" class="id-card-designation">Associate Professor</div>
+
+                <table class="id-card-details-table">
+                  <tr>
+                    <td class="lbl">Staff ID</td>
+                    <td id="card-id-display" class="val">STF-2026-881</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Department</td>
+                    <td id="card-dept-display" class="val">Cybersecurity & Networks</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Date of Joining</td>
+                    <td id="card-joining-display" class="val">2025-06-01</td>
+                  </tr>
+                  <tr>
+                    <td class="lbl">Valid Until</td>
+                    <td id="card-valid-display" class="val">2028-06-01</td>
+                  </tr>
+                </table>
+
+                <!-- Code 128 Barcode Container -->
+                <div class="id-card-barcode-container">
+                  <svg id="barcode-svg"></svg>
+                  <div id="card-token-display" class="id-card-token-text">TOKEN: OG-STF-2026-881</div>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div class="id-card-footer">
+                <div>SIG: <span id="card-sig-preview" class="id-card-sig-preview">...</span></div>
+                <div>OG STAFF</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Action Buttons -->
+          <div class="btn-group" style="justify-content: center; width: 100%;">
+            <button id="btn-print-card" class="btn btn-secondary">
+              🖨 Print ID Card
+            </button>
+            <button id="btn-download-png" class="btn btn-primary">
+              🖼 Download PNG
+            </button>
+            <button id="btn-download-json" class="btn btn-secondary">
+              📄 Download Signed JSON
+            </button>
+            <button id="btn-copy-sig" class="btn btn-secondary">
+              📋 Copy Signature
+            </button>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- 3. Cryptography Info Panel -->
+    <section class="card" style="margin-top: 1.5rem;">
+      <h2 class="card-title">
+        <span>🔒</span> Cryptographic Signature Details
+      </h2>
+      <p class="card-subtitle">
+        Mathematical metadata from the real Web Crypto signing operation.
+      </p>
+
+      <div class="grid-4" style="margin-bottom: 1.25rem;">
+        <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Algorithm & Hash</span>
+          <div style="font-weight: 700; color: var(--cyan-accent); font-size: 0.9rem;">RSASSA-PKCS1-v1_5 / SHA-256</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Modulus / Key Size</span>
+          <div style="font-weight: 700; color: var(--text-main); font-size: 0.9rem;">2048 bits (256 bytes)</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Signature Format</span>
+          <div id="crypto-sig-length" style="font-weight: 700; color: var(--text-main); font-size: 0.9rem;">344 Base64 chars (256 bytes)</div>
+        </div>
+        <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <span style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase;">Issuer Fingerprint</span>
+          <div id="crypto-fp-display" style="font-family: var(--font-mono); font-weight: 700; color: var(--color-success); font-size: 0.85rem;">—</div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div>
+          <div class="code-box-header">
+            <span>Canonical Staff JSON (Signed Payload)</span>
+          </div>
+          <pre id="crypto-canonical-json" class="code-box">/* Generate a card above to inspect canonical payload */</pre>
+        </div>
+        <div>
+          <div class="code-box-header">
+            <span>Base64 RSA-2048 Digital Signature</span>
+          </div>
+          <pre id="crypto-signature-b64" class="code-box">/* Generate a card above to inspect Base64 signature */</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Recent IDs Panel -->
+    <section class="card recent-ids-panel" style="margin-top: 1.5rem;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 class="card-title" style="margin-bottom: 0;">
+          <span>📋</span> Recent Generated IDs (LocalStorage)
+        </h2>
+        <button id="btn-clear-history" class="btn btn-danger btn-sm">
+          Clear History
+        </button>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Staff ID</th>
+              <th>Name</th>
+              <th>Department</th>
+              <th>Valid Until</th>
+              <th>Barcode Token</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="recent-ids-tbody">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="footer-highlight">OG STAFF</span> | Educational Security Laboratory Project | RSA Digital Signatures
+      </div>
+      <div>
+        College Security Lab Viva Mini-Project &bull; Department of Information Security
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/generate.js"></script>
+</body>
+</html>

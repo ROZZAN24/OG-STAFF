@@ -1,0 +1,445 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About & Viva Preparation — OG STAFF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .about-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2.5rem;
+      align-items: start;
+    }
+    .about-sidebar {
+      position: sticky;
+      top: 80px;
+      background: var(--bg-card);
+      border: 1px solid var(--cyan-border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+    }
+    .about-sidebar-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--cyan-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .about-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .about-nav-list a {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      display: block;
+      padding: 0.35rem 0.5rem;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .about-nav-list a:hover {
+      color: var(--cyan-accent);
+      background: rgba(0, 212, 255, 0.08);
+    }
+    .about-section {
+      background: var(--bg-card);
+      border: 1px solid var(--cyan-border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      scroll-margin-top: 90px;
+    }
+    .about-section h2 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      padding-bottom: 0.5rem;
+    }
+    .about-section p, .about-section li {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+    .about-section p {
+      margin-bottom: 1rem;
+    }
+    .about-section ul, .about-section ol {
+      padding-left: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .qa-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--cyan-border);
+      border-radius: var(--radius-sm);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .qa-question {
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: var(--cyan-accent);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .qa-answer {
+      font-size: 0.9rem;
+      color: var(--text-main);
+      line-height: 1.55;
+    }
+    @media (max-width: 992px) {
+      .about-layout {
+        grid-template-columns: 1fr;
+      }
+      .about-sidebar {
+        position: relative;
+        top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">OG</div>
+        <div class="brand-text">OG <span>STAFF</span></div>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="generate.html">Generate</a></li>
+          <li><a href="verify.html">Verify</a></li>
+          <li><a href="demo.html">Security Demo</a></li>
+          <li><a href="about.html" class="active">About & Viva</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Cryptographic Theory & Viva Guide</h1>
+      <p class="page-subtitle">
+        In-depth technical explanations of the RSA algorithm, digital signatures, Web Crypto architecture, Code 128 barcodes, and model viva examination questions.
+      </p>
+    </div>
+
+    <div class="about-layout">
+      
+      <!-- Sticky Sidebar Navigation -->
+      <aside class="about-sidebar">
+        <div class="about-sidebar-title">Table of Contents</div>
+        <ul class="about-nav-list">
+          <li><a href="#sec-rsa">1. What is RSA?</a></li>
+          <li><a href="#sec-vs">2. Signature vs Encryption</a></li>
+          <li><a href="#sec-sha256">3. SHA-256 Hashing</a></li>
+          <li><a href="#sec-webcrypto">4. Web Crypto API</a></li>
+          <li><a href="#sec-barcode">5. Barcode Technology</a></li>
+          <li><a href="#sec-algorithm">6. Verification Algorithm</a></li>
+          <li><a href="#sec-tampering">7. Tampering Detection</a></li>
+          <li><a href="#sec-limitations">8. Security Limitations</a></li>
+          <li><a href="#sec-viva">9. Viva Questions & Answers</a></li>
+        </ul>
+      </aside>
+
+      <!-- Content Sections -->
+      <div class="about-content">
+
+        <!-- 10.1 What is RSA? -->
+        <section id="sec-rsa" class="about-section">
+          <h2><span>📐</span> 1. What is the RSA Algorithm?</h2>
+          <p>
+            RSA (named after Ron Rivest, Adi Shamir, and Leonard Adleman who publicly described it in 1977) is an asymmetric public-key cryptosystem based on the mathematical difficulty of factoring the product of two large prime numbers.
+          </p>
+          <p>
+            In textbook RSA:
+          </p>
+          <ul>
+            <li>Two large, distinct prime numbers $p$ and $q$ are chosen at random.</li>
+            <li>The modulus $n$ is calculated as $n = p \times q$. The bit-length of $n$ defines the key length (e.g. 2048 bits in this project).</li>
+            <li>Euler's totient function is computed: $\phi(n) = (p - 1)(q - 1)$.</li>
+            <li>A public exponent $e$ is chosen such that $1 < e < \phi(n)$ and $\gcd(e, \phi(n)) = 1$. The standard industry standard value is $e = 65537$ ($2^{16} + 1$).</li>
+            <li>The private exponent $d$ is computed as the modular multiplicative inverse of $e \pmod{\phi(n)}$, satisfying: $e \cdot d \equiv 1 \pmod{\phi(n)}$.</li>
+          </ul>
+          <p>
+            <em>Implementation Note:</em> Modern cryptographic libraries like the W3C Web Crypto API (`window.crypto.subtle`) generate cryptographically secure primes in constant-time internal routines. This application delegates key generation directly to the browser's hardware/OS crypto engine rather than manually picking primes in JavaScript.
+          </p>
+        </section>
+
+        <!-- 10.2 Digital Signature vs Encryption -->
+        <section id="sec-vs" class="about-section">
+          <h2><span>⚖</span> 2. Digital Signatures vs Encryption</h2>
+          <p>
+            While both operations utilize asymmetric key pairs, their design objectives and key usage are polar opposites:
+          </p>
+
+          <div class="table-responsive">
+            <table class="data-table" style="margin-bottom: 1.25rem;">
+              <thead>
+                <tr>
+                  <th>Dimension</th>
+                  <th>Digital Signature (RSASSA-PKCS1-v1_5)</th>
+                  <th>Asymmetric Encryption (RSA-OAEP)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Primary Goal</strong></td>
+                  <td>Authenticity, Integrity, Non-Repudiation</td>
+                  <td>Confidentiality & Secrecy</td>
+                </tr>
+                <tr>
+                  <td><strong>Sender Action</strong></td>
+                  <td>Signs using sender's <strong>Private Key</strong></td>
+                  <td>Encrypts using recipient's <strong>Public Key</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Receiver Action</strong></td>
+                  <td>Verifies using sender's <strong>Public Key</strong></td>
+                  <td>Decrypts using recipient's <strong>Private Key</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>Plaintext Visibility</strong></td>
+                  <td>Data remains <strong>fully visible</strong> and readable</td>
+                  <td>Data is <strong>scrambled</strong> into ciphertext</td>
+                </tr>
+                <tr>
+                  <td><strong>ID Card Context</strong></td>
+                  <td>Security guards must read the name, but verify authenticity</td>
+                  <td>Encrypting the card would prevent guards from reading it</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            In OG STAFF, the staff card fields (Name, ID, Department) remain readable plaintext, accompanied by a 256-byte digital signature verifying that the institution authored the record.
+          </p>
+        </section>
+
+        <!-- 10.3 SHA-256 -->
+        <section id="sec-sha256" class="about-section">
+          <h2><span>⚡</span> 3. SHA-256 Cryptographic Hash Function</h2>
+          <p>
+            RSA signing cannot be applied directly to arbitrary-length documents because RSA arithmetic is computationally expensive and limited to messages smaller than the modulus $n$. Therefore, a cryptographic hash function like <strong>SHA-256</strong> (Secure Hash Algorithm 256-bit) is used:
+          </p>
+          <ul>
+            <li><strong>Fixed Digest Length:</strong> Maps arbitrarily large data to a deterministic 32-byte (256-bit) digest.</li>
+            <li><strong>Preimage Resistance (One-Way):</strong> Given a hash $H$, it is computationally infeasible to find $M$ such that $\text{SHA-256}(M) = H$.</li>
+            <li><strong>Collision Resistance:</strong> Computationally impossible to find two distinct messages $M_1 \neq M_2$ yielding $\text{SHA-256}(M_1) = \text{SHA-256}(M_2)$.</li>
+            <li><strong>Avalanche Effect:</strong> Changing even a single bit in the input alters approximately 50% of the output bits in a pseudo-random fashion.</li>
+          </ul>
+          <p>
+            <em>Crucial Viva Point:</em> A SHA-256 hash alone is <strong>not</strong> a digital signature. Anyone can recompute the SHA-256 hash of modified data. A signature requires encrypting the hash using the private key, binding the content to the signer's identity.
+          </p>
+        </section>
+
+        <!-- 10.4 Web Crypto API -->
+        <section id="sec-webcrypto" class="about-section">
+          <h2><span>🌐</span> 4. The W3C Web Crypto API</h2>
+          <p>
+            The project uses exclusively the native W3C Web Crypto API (`window.crypto.subtle`):
+          </p>
+          <ul>
+            <li><code>crypto.subtle.generateKey()</code>: Generates the 2048-bit RSA key pair with RSASSA-PKCS1-v1_5 and SHA-256.</li>
+            <li><code>crypto.subtle.sign()</code>: Signs the UTF-8 canonical byte array using the institutional private key.</li>
+            <li><code>crypto.subtle.verify()</code>: Verifies the 256-byte signature against the canonical byte array using the trusted public key.</li>
+            <li><code>crypto.subtle.digest()</code>: Computes raw SHA-256 digests for public key fingerprints and educational audit logging.</li>
+            <li><code>crypto.subtle.exportKey()</code> / <code>importKey()</code>: Serializes and deserializes keys in standard JWK and SPKI formats.</li>
+          </ul>
+          <p>
+            <strong>Secure Context Requirement:</strong> Web Crypto APIs are restricted by browser security policies to <em>Secure Contexts</em> (HTTPS or `http://localhost`). Serving via `http://localhost:8080` fulfills this requirement.
+          </p>
+        </section>
+
+        <!-- 10.5 Barcode Technology -->
+        <section id="sec-barcode" class="about-section">
+          <h2><span>📊</span> 5. Barcode Technology: Code 128 vs QR Codes</h2>
+          <p>
+            In this project, QR codes have been completely replaced with traditional <strong>1D Code 128 barcodes</strong>.
+          </p>
+          <p>
+            <strong>Code 128 Characteristics:</strong>
+          </p>
+          <ul>
+            <li>High-density 1D linear barcode supporting the complete ASCII 128 character set.</li>
+            <li>Contains start/stop characters and a modulo-103 checksum character for scan error detection.</li>
+          </ul>
+          <p>
+            <strong>Practical Density Limitation & The Compact Token Strategy:</strong>
+          </p>
+          <p>
+            A 2048-bit RSA signature encoded in Base64 is 344 characters long. Adding JSON staff fields produces a payload exceeding 500 characters. In a 1D barcode, encoding 500 characters results in an impractically wide barcode that cannot fit on a standard 85.6mm &times; 54mm ID badge and cannot be read by consumer cameras.
+          </p>
+          <p>
+            Therefore, this project employs an institutional reference strategy:
+          </p>
+          <ol>
+            <li>The Code 128 barcode encodes a compact, printable token (e.g. <code>OG-STF-XXXX</code>).</li>
+            <li>The complete signed record is stored in the verifier's database / LocalStorage under that token, or imported via a signed JSON file.</li>
+            <li>Scanning the barcode retrieves the full signed record, and the verifier mathematically verifies the RSA signature using the trusted public key.</li>
+          </ol>
+          <p>
+            <em>Remember:</em> Decoding a barcode merely extracts characters. It provides zero security. Cryptographic authenticity comes entirely from the RSA signature verification.
+          </p>
+        </section>
+
+        <!-- 10.6 Signature Verification Algorithm -->
+        <section id="sec-algorithm" class="about-section">
+          <h2><span>⚙</span> 6. Step-by-Step Verification Algorithm</h2>
+          <ol>
+            <li><strong>Receive Input:</strong> Verifier acquires the staff record and Base64 digital signature via barcode lookup, JSON file, or manual entry.</li>
+            <li><strong>Schema Validation:</strong> Confirm required canonical fields (`staffId`, `staffName`, `department`, `designation`, `institution`, `joiningDate`, `validUntil`) are present.</li>
+            <li><strong>Select Trusted Public Key:</strong> Obtain the institution's public key from a trusted local store or certificate. <em>Never trust a key inside the barcode!</em></li>
+            <li><strong>Canonicalize Data:</strong> Construct the canonical JSON object with exact key ordering and serialize to UTF-8 bytes using <code>TextEncoder</code>.</li>
+            <li><strong>Decode Signature:</strong> Convert the 344-character Base64 signature into a 256-byte ArrayBuffer.</li>
+            <li><strong>Execute Cryptographic Verification:</strong> Invoke <code>crypto.subtle.verify()</code>. If the signature does not match, return <code>INVALID</code> immediately.</li>
+            <li><strong>Evaluate Expiration:</strong> Independently compare the ISO date <code>validUntil</code> against current local date. If expired, return <code>EXPIRED</code> (authentic, but lapsed).</li>
+            <li><strong>Conclude:</strong> If signature is valid and date is unexpired, return <code>VERIFIED</code>.</li>
+          </ol>
+        </section>
+
+        <!-- 10.7 Tampering Detection -->
+        <section id="sec-tampering" class="about-section">
+          <h2><span>🛡</span> 7. Tampering Detection & Unsigned Fields</h2>
+          <p>
+            Because RSASSA-PKCS1-v1_5 binds the private key to the exact SHA-256 digest of the canonical string, any unauthorized change — such as changing <em>"Assistant Professor"</em> to <em>"Professor"</em> — alters the canonical string, alters the SHA-256 hash, and causes <code>crypto.subtle.verify()</code> to fail.
+          </p>
+          <p>
+            <strong>Unsigned Fields (E.g. Photo):</strong> In this project, the staff photograph is for visual display only and is deliberately excluded from the canonical signature payload to keep payloads compact. Consequently, replacing the photograph would not trigger a cryptographic signature failure. In a production government ID system, a SHA-256 hash of the photo bytes would also be included inside the canonical payload.
+          </p>
+        </section>
+
+        <!-- 10.8 Security Limitations -->
+        <section id="sec-limitations" class="about-section">
+          <h2><span>⚠️</span> 8. Security Limitations (Educational Prototype vs Production)</h2>
+          <p>
+            When discussing this project during a viva examination, students must demonstrate security awareness by identifying the prototype's real-world limitations:
+          </p>
+          <ul>
+            <li><strong>Private Key in LocalStorage:</strong> LocalStorage is accessible to any script running on the origin and anyone with physical access to the browser profile. Production systems must store private keys in Hardware Security Modules (HSMs) or cloud KMS.</li>
+            <li><strong>Public Key Trust & Distribution:</strong> The prototype relies on manual public key loading. Production requires a Public Key Infrastructure (PKI) with hierarchical Certificate Authorities (CAs).</li>
+            <li><strong>Revocation:</strong> The system lacks an online Certificate Revocation List (CRL) or OCSP responder to revoke keys or badges before their expiration date.</li>
+            <li><strong>Barcode Cloning:</strong> Anyone can photocopy a 1D barcode. Without biometric confirmation or a secure challenge-response chip (like an NFC smart card), barcodes can be cloned.</li>
+          </ul>
+        </section>
+
+        <!-- 10.9 Viva Questions and Answers -->
+        <section id="sec-viva" class="about-section">
+          <h2><span>🎓</span> 9. Top 10 Security Laboratory Viva Questions & Answers</h2>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q1.</span> What is RSA, and why is it called an asymmetric cryptosystem?</div>
+            <div class="qa-answer">
+              RSA is a public-key cryptosystem based on modular arithmetic and the integer factorization problem. It is called asymmetric because it uses two mathematically linked but distinct keys: a <strong>public key</strong> for encryption or signature verification, and a <strong>private key</strong> for decryption or signing. Knowledge of the public key does not reveal the private key.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q2.</span> What is the fundamental difference between public and private keys in digital signatures?</div>
+            <div class="qa-answer">
+              In digital signing, the <strong>private key</strong> must remain confidential to the signing authority (e.g. the college registrar) and is used to create digital signatures. The <strong>public key</strong> is published to all verifiers (e.g. security guards, campus gates) and is used solely to verify that the signature was created by the matching private key.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q3.</span> What security properties does a digital signature provide?</div>
+            <div class="qa-answer">
+              A digital signature provides three core security services:
+              <strong>Authenticity</strong> (proves the true identity of the signer),
+              <strong>Data Integrity</strong> (proves the document was not altered in transit), and
+              <strong>Non-repudiation</strong> (the signer cannot deny having signed the document).
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q4.</span> Why is SHA-256 hashing performed prior to RSA signing?</div>
+            <div class="qa-answer">
+              Direct RSA calculation is computationally expensive and limited to inputs smaller than the key modulus (e.g., 2048 bits / 256 bytes). Hashing compresses an arbitrary-length document into a fixed 256-bit digest in constant time, allowing RSA to sign only the digest while preserving collision resistance.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q5.</span> Why does this project strictly enforce canonical JSON before signing?</div>
+            <div class="qa-answer">
+              JSON objects in JavaScript have indeterminate key serialization orders, and different parsers may format spacing or newlines differently. Canonicalization guarantees that the exact same key order and byte sequence is evaluated during both signing and verification. If even a single space or key position changed, the SHA-256 hash would differ, causing verification to fail.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q6.</span> What is the Avalanche Effect, and how does it detect tampering?</div>
+            <div class="qa-answer">
+              The avalanche effect is a property of cryptographic hash functions where changing even a single bit of input flips approximately 50% of the output bits pseudo-randomly. When an attacker alters one character in a staff ID, the computed SHA-256 hash changes completely, making it impossible for the original signature to match.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q7.</span> Why is a barcode not a security mechanism by itself?</div>
+            <div class="qa-answer">
+              A barcode is merely an optical representation of alphanumeric characters. Anyone can print or copy a barcode using free online generators. Security comes exclusively from the <strong>cryptographic digital signature</strong> verified after decoding the barcode.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q8.</span> Why must the public key be obtained from a trusted out-of-band source rather than the barcode?</div>
+            <div class="qa-answer">
+              If the verifier trusted a public key embedded in the barcode itself, an attacker could generate their own key pair, sign forged staff data with their own private key, and provide their own public key. The verification math would succeed! True security requires verifying against the institution's pre-configured, trusted public key.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q9.</span> How does this system distinguish between an EXPIRED record and an INVALID record?</div>
+            <div class="qa-answer">
+              Signature verification and expiration are independent checks. If the signature is mathematically valid but the calendar date has passed <code>validUntil</code>, the badge is marked <strong>EXPIRED</strong> (genuine, but no longer active). If the signature does not match, it is marked <strong>INVALID</strong> (forged or tampered). An expired badge that has also been tampered with is always classified as <strong>INVALID</strong>.
+            </div>
+          </div>
+
+          <div class="qa-card">
+            <div class="qa-question"><span>Q10.</span> What are the risks of storing RSA private keys in browser LocalStorage?</div>
+            <div class="qa-answer">
+              LocalStorage offers no encryption at rest, is accessible to any JavaScript running on the origin (vulnerable to Cross-Site Scripting / XSS), and can be inspected by anyone with access to the computer's user profile. In production, private keys must be protected in Hardware Security Modules (HSMs) or cloud Key Management Services (KMS).
+            </div>
+          </div>
+
+        </section>
+
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="footer-highlight">OG STAFF</span> | Educational Security Laboratory Project | RSA Digital Signatures
+      </div>
+      <div>
+        College Security Lab Viva Mini-Project &bull; Department of Information Security
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/common.js"></script>
+</body>
+</html>

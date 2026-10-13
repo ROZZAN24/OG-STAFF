@@ -1,0 +1,213 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OG STAFF — RSA Digital Signature Staff Verification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">OG</div>
+        <div class="brand-text">OG <span>STAFF</span></div>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html" class="active">Home</a></li>
+          <li><a href="generate.html">Generate</a></li>
+          <li><a href="verify.html">Verify</a></li>
+          <li><a href="demo.html">Security Demo</a></li>
+          <li><a href="about.html">About & Viva</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    
+    <!-- Hero Section -->
+    <section class="page-header" style="padding: 2.5rem 0 3.5rem;">
+      <div style="display: flex; justify-content: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+        <span class="badge badge-cyan">RSA-2048</span>
+        <span class="badge badge-cyan">SHA-256</span>
+        <span class="badge badge-success">DIGITAL SIGNATURE</span>
+        <span class="badge badge-cyan">CODE 128 BARCODE VERIFICATION</span>
+      </div>
+
+      <h1 class="page-title" style="font-size: 3rem; margin-bottom: 1rem;">
+        OG STAFF — Identity Verification System
+      </h1>
+      <p class="page-subtitle" style="font-size: 1.2rem; max-width: 780px;">
+        Generate tamper-evident staff ID cards and verify their authenticity using RSA digital signatures and SHA-256. Built with browser-native Web Crypto for security laboratory research and viva examinations.
+      </p>
+
+      <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 2rem;">
+        <a href="generate.html" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
+          🪪 Generate Staff ID
+        </a>
+        <a href="verify.html" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
+          🔍 Verify Staff ID
+        </a>
+        <a href="demo.html" class="btn btn-secondary" style="font-size: 1.05rem; padding: 0.85rem 1.8rem;">
+          ⚡ Explore Security Demo
+        </a>
+      </div>
+    </section>
+
+    <!-- Architecture & Localhost Callout -->
+    <div class="security-warning-banner" style="background: rgba(0, 212, 255, 0.08); border-color: rgba(0, 212, 255, 0.3); border-left-color: var(--cyan-accent); color: var(--text-main);">
+      <span class="security-warning-icon" style="color: var(--cyan-accent);">ℹ</span>
+      <div>
+        <strong>Local Server Execution Architecture:</strong>
+        This application requires no external backend database or cloud server API. However, because modern browsers mandate a <strong>Secure Context</strong> for the W3C Web Crypto API (`window.crypto.subtle`) and camera barcode scanning, this project must be run from a local HTTP server such as <code>python -m http.server 8080</code> on <code>http://localhost:8080</code>.
+      </div>
+    </div>
+
+    <!-- 4 Features / Stat Cards -->
+    <section style="margin-bottom: 3.5rem;">
+      <div class="grid-4">
+        <div class="card" style="margin-bottom: 0;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--cyan-accent);">🔑</div>
+          <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 0.5rem;">RSA-2048</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">
+            RSASSA-PKCS1-v1_5 asymmetric cryptography with a 2048-bit modulus and public exponent 65537, producing a 256-byte digital signature.
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 0;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--cyan-accent);">⚡</div>
+          <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 0.5rem;">SHA-256 Hashing</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">
+            Cryptographic digest that maps canonical staff data to an unforgeable 256-bit hash, exhibiting a strict avalanche effect upon any alteration.
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 0;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-success);">🛡</div>
+          <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 0.5rem;">Web Crypto API</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">
+            100% real browser-native cryptographic operations executing directly in hardware/OS primitives. No simulated or hardcoded results.
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 0;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--cyan-accent);">📊</div>
+          <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 0.5rem;">Code 128 Barcodes</h3>
+          <p style="color: var(--text-muted); font-size: 0.88rem;">
+            Traditional 1D high-density barcode tokens with live camera scanning (ZXing) linked to cryptographically verifiable digital records.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Workflow Section -->
+    <section class="card" style="margin-bottom: 3.5rem;">
+      <h2 class="card-title" style="font-size: 1.5rem; justify-content: center; margin-bottom: 0.5rem;">
+        Cryptographic Workflow Pipeline
+      </h2>
+      <p class="card-subtitle" style="text-align: center; margin-bottom: 2rem;">
+        From institutional key generation to mathematical verification of identity cards
+      </p>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; position: relative;">
+        
+        <div style="flex: 1; min-width: 150px; text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.4rem;">1. 🔑</div>
+          <strong style="color: var(--cyan-accent); font-size: 0.95rem;">Generate Keys</strong>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Create RSA-2048 key pair in browser</p>
+        </div>
+
+        <div style="color: var(--cyan-accent); font-size: 1.25rem;">➔</div>
+
+        <div style="flex: 1; min-width: 150px; text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.4rem;">2. 📝</div>
+          <strong style="color: var(--cyan-accent); font-size: 0.95rem;">Enter Staff Data</strong>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Construct canonical JSON payload</p>
+        </div>
+
+        <div style="color: var(--cyan-accent); font-size: 1.25rem;">➔</div>
+
+        <div style="flex: 1; min-width: 150px; text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.4rem;">3. ✍</div>
+          <strong style="color: var(--cyan-accent); font-size: 0.95rem;">Sign Record</strong>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Sign SHA-256 hash with Private Key</p>
+        </div>
+
+        <div style="color: var(--cyan-accent); font-size: 1.25rem;">➔</div>
+
+        <div style="flex: 1; min-width: 150px; text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.4rem;">4. 📊</div>
+          <strong style="color: var(--cyan-accent); font-size: 0.95rem;">Print Barcode</strong>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Generate Code 128 ID token & card</p>
+        </div>
+
+        <div style="color: var(--cyan-accent); font-size: 1.25rem;">➔</div>
+
+        <div style="flex: 1; min-width: 150px; text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--cyan-border);">
+          <div style="font-size: 1.5rem; margin-bottom: 0.4rem;">5. 📷</div>
+          <strong style="color: var(--cyan-accent); font-size: 0.95rem;">Scan & Verify</strong>
+          <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.25rem;">Verify math against Trusted Public Key</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Digital Signatures vs Encryption Concept -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <h2 class="card-title">
+        <span>⚖</span> Educational Concept: Digital Signatures vs Encryption
+      </h2>
+      <p style="color: var(--text-muted); font-size: 0.92rem; margin-bottom: 1.5rem;">
+        A common misconception in security lab examinations is confusing <em>encryption</em> with <em>digital signing</em>. Both utilize RSA asymmetric keys, but they solve fundamentally different problems:
+      </p>
+
+      <div class="grid-2">
+        <div style="padding: 1.25rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border-left: 4px solid var(--cyan-accent);">
+          <h4 style="color: var(--cyan-accent); margin-bottom: 0.5rem; font-size: 1.1rem;">Digital Signature (Used Here)</h4>
+          <ul style="padding-left: 1.25rem; color: var(--text-main); font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.4rem;">
+            <li><strong>Purpose:</strong> Authenticity, Data Integrity, Non-repudiation.</li>
+            <li><strong>Signing Key:</strong> Sender's <em>Private Key</em>.</li>
+            <li><strong>Verification Key:</strong> Sender's <em>Public Key</em> (known to all verifiers).</li>
+            <li><strong>Visibility:</strong> Plaintext remains <strong>readable</strong>. Anyone can inspect staff details.</li>
+            <li><strong>Guarantee:</strong> Proves the data was issued by the genuine keyholder and has not suffered even 1 bit of tampering.</li>
+          </ul>
+        </div>
+
+        <div style="padding: 1.25rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border-left: 4px solid #ab47bc;">
+          <h4 style="color: #ce93d8; margin-bottom: 0.5rem; font-size: 1.1rem;">Data Encryption (Confidentiality)</h4>
+          <ul style="padding-left: 1.25rem; color: var(--text-main); font-size: 0.88rem; display: flex; flex-direction: column; gap: 0.4rem;">
+            <li><strong>Purpose:</strong> Confidentiality & Privacy.</li>
+            <li><strong>Encryption Key:</strong> Recipient's <em>Public Key</em>.</li>
+            <li><strong>Decryption Key:</strong> Recipient's <em>Private Key</em>.</li>
+            <li><strong>Visibility:</strong> Plaintext is <strong>concealed</strong> (ciphertext looks like random noise).</li>
+            <li><strong>Distinction:</strong> On an ID card, staff details must be physically readable by security guards, making digital signatures the correct technology.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="footer-highlight">OG STAFF</span> | Educational Security Laboratory Project | RSA Digital Signatures
+      </div>
+      <div>
+        College Security Lab Viva Mini-Project &bull; Department of Information Security
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/common.js"></script>
+</body>
+</html>

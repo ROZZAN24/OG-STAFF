@@ -1,0 +1,260 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Security Laboratory Demonstration — OG STAFF</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">OG</div>
+        <div class="brand-text">OG <span>STAFF</span></div>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="generate.html">Generate</a></li>
+          <li><a href="verify.html">Verify</a></li>
+          <li><a href="demo.html" class="active">Security Demo</a></li>
+          <li><a href="about.html">About & Viva</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Interactive Security Laboratory Demo</h1>
+      <p class="page-subtitle">
+        Hands-on live demonstration for laboratory viva examinations: observe real RSA-2048 signing, tamper detection via the hash avalanche effect, and attacker key rejection.
+      </p>
+    </div>
+
+    <!-- Step 1: Generate Authentic Baseline ID -->
+    <section class="card" id="demo-step1-card">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <h2 class="card-title" style="margin-bottom: 0;">
+          <span>1️⃣</span> Step 1: Generate Authentic Baseline Record
+        </h2>
+        <div id="step1-result-badge">
+          <span class="badge badge-warning">AWAITING GENERATION</span>
+        </div>
+      </div>
+
+      <p class="card-subtitle">
+        Sign a sample faculty record using the legitimate college issuer's private key.
+      </p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem; background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--cyan-border); margin-bottom: 1.25rem; font-size: 0.88rem;">
+        <div><strong>Staff ID:</strong> STF-1001</div>
+        <div><strong>Name:</strong> Arun Kumar</div>
+        <div><strong>Department:</strong> Computer Science</div>
+        <div><strong>Designation:</strong> Assistant Professor</div>
+        <div><strong>Institution:</strong> Sample Engineering College</div>
+        <div><strong>Joining Date:</strong> 2025-06-01</div>
+        <div><strong>Valid Until:</strong> 2027-06-01</div>
+        <div><strong>Issuer Public Key FP:</strong> <span id="demo-issuer-fp" style="color: var(--cyan-accent); font-family: var(--font-mono);">—</span></div>
+      </div>
+
+      <button id="btn-demo-step1-generate" class="btn btn-primary" style="margin-bottom: 1.25rem;">
+        ⚡ Generate Authentic Signed ID
+      </button>
+
+      <div class="grid-3">
+        <div>
+          <div class="code-box-header"><span>Canonical JSON</span></div>
+          <pre id="step1-canonical-box" class="code-box">/* Click generate above */</pre>
+        </div>
+        <div>
+          <div class="code-box-header"><span>SHA-256 Hash Digest</span></div>
+          <pre id="step1-hash-box" class="code-box">/* SHA-256 will appear here */</pre>
+        </div>
+        <div>
+          <div class="code-box-header"><span>RSA-2048 Digital Signature</span></div>
+          <pre id="step1-sig-box" class="code-box">/* Digital signature will appear here */</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 2: Demonstrate Tampering & Avalanche Effect -->
+    <section class="card" id="demo-step2-card" style="opacity: 0.6; pointer-events: none; transition: var(--transition);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem;">
+        <h2 class="card-title" style="margin-bottom: 0;">
+          <span>2️⃣</span> Step 2: Tamper with Record & Observe Verification Failure
+        </h2>
+        <div id="tamper-hash-match-badge" class="badge badge-success">HASHES MATCH</div>
+      </div>
+
+      <p class="card-subtitle">
+        Modify any field below (e.g. elevate designation from Assistant Professor to Professor). Observe how changing 1 character causes the SHA-256 hash to change completely and invalidates the original signature.
+      </p>
+
+      <!-- Editable Tamper Fields -->
+      <div style="background: var(--bg-secondary); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid var(--cyan-border); margin-bottom: 1.25rem;">
+        <div class="grid-4" style="gap: 0.75rem; margin-bottom: 0.75rem;">
+          <div>
+            <label class="form-label" style="font-size: 0.75rem;">Staff ID</label>
+            <input type="text" id="tamper-id" class="form-control tamper-field">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.75rem;">Staff Name</label>
+            <input type="text" id="tamper-name" class="form-control tamper-field">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.75rem;">Department</label>
+            <input type="text" id="tamper-dept" class="form-control tamper-field">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.75rem;">Designation</label>
+            <input type="text" id="tamper-desig" class="form-control tamper-field">
+          </div>
+        </div>
+
+        <div class="grid-3" style="gap: 0.75rem;">
+          <div>
+            <label class="form-label" style="font-size: 0.75rem;">Institution</label>
+            <input type="text" id="tamper-inst" class="form-control tamper-field">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.75rem;">Joining Date</label>
+            <input type="date" id="tamper-joining" class="form-control tamper-field">
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.75rem;">Valid Until</label>
+            <input type="date" id="tamper-valid" class="form-control tamper-field">
+          </div>
+        </div>
+
+        <div class="btn-group" style="margin-top: 1rem;">
+          <button id="btn-demo-quick-tamper" class="btn btn-danger btn-sm">
+            🚨 Quick Tamper: Change "Assistant Professor" → "Professor"
+          </button>
+          <button id="btn-demo-reset-tamper" class="btn btn-secondary btn-sm">
+            ↺ Reset to Original Values
+          </button>
+        </div>
+      </div>
+
+      <!-- Side-by-Side Comparison -->
+      <div class="grid-2" style="margin-bottom: 1.25rem;">
+        <div>
+          <div class="code-box-header"><span>Original Canonical JSON</span></div>
+          <pre id="tamper-orig-json" class="code-box"></pre>
+          <div class="code-box-header" style="margin-top: 0.5rem;"><span>Original SHA-256 Hash</span></div>
+          <pre id="tamper-orig-hash" class="code-box" style="color: var(--color-success);"></pre>
+        </div>
+
+        <div>
+          <div class="code-box-header"><span>Current / Tampered Canonical JSON</span></div>
+          <pre id="tamper-curr-json" class="code-box"></pre>
+          <div class="code-box-header" style="margin-top: 0.5rem;"><span>Current / Tampered SHA-256 Hash</span></div>
+          <pre id="tamper-curr-hash" class="code-box" style="color: var(--color-warning);"></pre>
+        </div>
+      </div>
+
+      <button id="btn-demo-verify-tampered" class="btn btn-primary">
+        🔍 Verify Tampered Record with Original Signature
+      </button>
+
+      <!-- Tamper Result Box -->
+      <div id="tamper-result-box" class="result-card state-invalid" style="display: none; margin-top: 1.25rem;">
+        <div id="tamper-result-title" class="result-title">TAMPERING DETECTED</div>
+        <div id="tamper-result-msg" class="result-meta" style="margin-top: 0.5rem;"></div>
+      </div>
+    </section>
+
+    <!-- Step 3: Demonstrate Attacker Key Forgery Failure -->
+    <section class="card" id="demo-step3-card" style="opacity: 0.6; pointer-events: none; transition: var(--transition);">
+      <h2 class="card-title">
+        <span>3️⃣</span> Step 3: Attacker Forgery Attempt (Different Key Pair)
+      </h2>
+      <p class="card-subtitle">
+        What happens if an adversary creates their own RSA key pair and signs the staff record? The verifier checks the signature against the <strong>College Issuer's Public Key</strong>.
+      </p>
+
+      <div class="grid-2" style="margin-bottom: 1.25rem;">
+        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(0, 230, 118, 0.4);">
+          <span class="badge badge-success" style="margin-bottom: 0.5rem;">GENUINE ISSUER</span>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Trusted Public Key Fingerprint:</div>
+          <div style="font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-top: 0.2rem;">
+            Issuer FP: <span id="demo-issuer-fp-2" style="color: var(--color-success);">Loaded in Step 1</span>
+          </div>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid rgba(255, 82, 82, 0.4);">
+          <span class="badge badge-error" style="margin-bottom: 0.5rem;">MALICIOUS ATTACKER</span>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Attacker Public Key Fingerprint:</div>
+          <div style="font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-top: 0.2rem;">
+            Attacker FP: <span id="demo-attacker-fp" style="color: var(--color-error);">Not Generated Yet</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="btn-demo-generate-attacker" class="btn btn-danger" style="margin-bottom: 1.25rem;">
+        ☠ Generate Attacker Keys & Sign Forgery
+      </button>
+
+      <div>
+        <div class="code-box-header"><span>Attacker's Forged Signature (Signed with Attacker Private Key)</span></div>
+        <pre id="attacker-forged-sig" class="code-box">/* Click generate attacker keys above */</pre>
+      </div>
+
+      <div id="attacker-result-box" class="result-card state-invalid" style="display: none; margin-top: 1.25rem;">
+        <div id="attacker-result-title" class="result-title">FORGERY REJECTED</div>
+        <div id="attacker-result-msg" class="result-meta" style="margin-top: 0.5rem;"></div>
+      </div>
+    </section>
+
+    <!-- Educational Viva Explanations -->
+    <section class="card">
+      <h2 class="card-title">
+        <span>🎓</span> Security Laboratory Key Concepts & Viva Principles
+      </h2>
+
+      <div class="grid-2">
+        <div style="padding: 1.25rem; background: var(--bg-secondary); border-radius: var(--radius-sm);">
+          <h4 style="color: var(--cyan-accent); margin-bottom: 0.5rem;">What Digital Signatures Guarantee</h4>
+          <ul style="padding-left: 1.2rem; font-size: 0.88rem; color: var(--text-main); display: flex; flex-direction: column; gap: 0.35rem;">
+            <li><strong>Authenticity:</strong> Verifies the sender actually holds the private key matching the trusted public key.</li>
+            <li><strong>Integrity:</strong> Ensures the payload has not been modified in transit by even 1 single character or bit.</li>
+            <li><strong>Non-repudiation:</strong> The issuer cannot deny having signed the document, as only their private key can produce that signature.</li>
+          </ul>
+        </div>
+
+        <div style="padding: 1.25rem; background: var(--bg-secondary); border-radius: var(--radius-sm);">
+          <h4 style="color: var(--color-warning); margin-bottom: 0.5rem;">The Cryptographic Avalanche Effect</h4>
+          <p style="font-size: 0.88rem; color: var(--text-main); line-height: 1.5;">
+            In SHA-256, changing even 1 bit of input flips approximately <strong>50% of the output bits</strong> pseudorandomly. In our demo, changing <em>"Assistant Professor"</em> to <em>"Professor"</em> produces a completely unrecognizable 256-bit hash, preventing any possibility of a hash collision under modern computation.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="footer-highlight">OG STAFF</span> | Educational Security Laboratory Project | RSA Digital Signatures
+      </div>
+      <div>
+        College Security Lab Viva Mini-Project &bull; Department of Information Security
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/demo.js"></script>
+</body>
+</html>

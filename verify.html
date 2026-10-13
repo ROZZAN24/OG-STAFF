@@ -1,0 +1,233 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verify Staff ID — OG STAFF (RSA-2048)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- ZXing library for Code 128 barcode scanning -->
+  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.20.0/umd/index.min.js"></script>
+</head>
+<body>
+
+  <!-- Site Navigation -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="brand">
+        <div class="brand-icon">OG</div>
+        <div class="brand-text">OG <span>STAFF</span></div>
+      </a>
+      <nav>
+        <ul class="nav-links">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="generate.html">Generate</a></li>
+          <li><a href="verify.html" class="active">Verify</a></li>
+          <li><a href="demo.html">Security Demo</a></li>
+          <li><a href="about.html">About & Viva</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1 class="page-title">Cryptographic ID Verification</h1>
+      <p class="page-subtitle">
+        Validate digital signatures against the institution's trusted RSA public key using live Code 128 barcode scanning, image decoding, or manual inspection.
+      </p>
+    </div>
+
+    <!-- 1. Trusted Public Key Panel -->
+    <section class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.75rem;">
+        <h2 class="card-title" style="margin-bottom: 0;">
+          <span>🏛</span> Verifier's Trusted Issuer Public Key
+        </h2>
+        <div id="trusted-key-status" class="badge badge-warning">CHECKING...</div>
+      </div>
+
+      <div class="security-warning-banner" id="trusted-key-warning" style="display: none;">
+        <span class="security-warning-icon">⚠</span>
+        <div>
+          <strong>Trust Warning:</strong> No trusted public key is currently active. Verification cannot validate authenticity without a trusted institutional public key. Use the buttons below to load the stored key or import an institutional public key.
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; padding: 1rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border: 1px solid var(--cyan-border); margin-bottom: 1rem;">
+        <div>
+          <span style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Active Trusted Public Key Fingerprint (SPKI SHA-256)</span>
+          <div id="trusted-key-fingerprint" style="font-family: var(--font-mono); font-size: 0.95rem; font-weight: 700; color: var(--cyan-accent); margin-top: 0.2rem;">
+            None
+          </div>
+        </div>
+        <div class="btn-group">
+          <button id="btn-use-stored-key" class="btn btn-secondary btn-sm">
+            ↺ Use Stored Issuer Key
+          </button>
+          <button id="btn-import-pub-file" class="btn btn-secondary btn-sm">
+            ⬆ Import Public Key File (JWK)
+          </button>
+          <input type="file" id="pub-key-file-input" accept=".json" style="display: none;">
+          <button id="btn-paste-key" class="btn btn-secondary btn-sm">
+            📋 Paste Key (JWK / SPKI)
+          </button>
+        </div>
+      </div>
+
+      <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0;">
+        ℹ <strong>Security Rule:</strong> The verifier must never blindly trust a public key extracted from a barcode or badge itself. Trust comes from establishing the key out-of-band via an institutional registry or PKI.
+      </p>
+    </section>
+
+    <!-- 2. Verification Modes Tabs -->
+    <section class="card">
+      <div class="tab-nav">
+        <button class="tab-btn active" data-tab="tab-camera">
+          📷 Scan Barcode (Camera)
+        </button>
+        <button class="tab-btn" data-tab="tab-manual">
+          ✍ Manual Verification / JSON
+        </button>
+        <button class="tab-btn" data-tab="tab-image">
+          🖼 Upload Barcode Image
+        </button>
+      </div>
+
+      <!-- Tab 1: Live Camera Scanner -->
+      <div id="tab-camera" class="tab-pane active">
+        <p class="card-subtitle">
+          Point your device camera at a printed or displayed Code 128 barcode. The scanner will decode the unique token and cryptographically verify the signed record.
+        </p>
+
+        <div class="scanner-container">
+          <video id="scanner-video" class="scanner-video" playsinline></video>
+          <div id="scanner-laser" class="scanner-overlay"></div>
+          <div id="scanner-placeholder" class="scanner-placeholder">
+            <div style="font-size: 3rem; margin-bottom: 0.5rem; color: var(--text-dim);">📷</div>
+            <div id="scanner-status-text" style="font-size: 0.95rem; font-weight: 600;">Camera is idle</div>
+            <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.25rem;">
+              Camera access will only be requested after clicking Start Camera.
+            </p>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 1.25rem;">
+          <button id="btn-start-camera" class="btn btn-primary">
+            ▶ Start Camera Scanner
+          </button>
+          <button id="btn-stop-camera" class="btn btn-secondary" disabled>
+            ⏹ Stop Camera
+          </button>
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+          Decoded Barcode Token: <strong id="scanned-token-output" style="color: var(--cyan-accent); font-family: var(--font-mono);">—</strong>
+        </div>
+      </div>
+
+      <!-- Tab 2: Manual JSON Verification -->
+      <div id="tab-manual" class="tab-pane">
+        <p class="card-subtitle">
+          Paste the staff JSON data and its Base64 signature, or import a complete signed JSON record exported from another computer.
+        </p>
+
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+          <button id="btn-import-signed-json" class="btn btn-secondary btn-sm">
+            📄 Import Complete Signed JSON File
+          </button>
+          <input type="file" id="import-json-file-input" accept=".json" style="display: none;">
+          <button id="btn-load-example" class="btn btn-secondary btn-sm">
+            ↺ Load Example Record
+          </button>
+        </div>
+
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label" for="manual-json-input">Staff JSON Data (Canonical Structure) <span class="required">*</span></label>
+            <textarea id="manual-json-input" class="form-control" rows="9" placeholder='{\n  "staffId": "STF-2026-881",\n  "staffName": "Dr. Priya Sharma",\n  "department": "Cybersecurity & Networks",\n  "designation": "Associate Professor",\n  "institution": "Apex Institute of Technology",\n  "joiningDate": "2025-06-01",\n  "validUntil": "2028-06-01"\n}'></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="manual-sig-input">Base64 RSA Digital Signature <span class="required">*</span></label>
+            <textarea id="manual-sig-input" class="form-control" rows="9" placeholder="Paste 344-character Base64 signature string here..."></textarea>
+          </div>
+        </div>
+
+        <div class="btn-group">
+          <button id="btn-verify-manual" class="btn btn-primary">
+            🛡 Verify Signature
+          </button>
+          <button id="btn-clear-manual" class="btn btn-secondary">
+            Clear Form
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab 3: Upload Barcode Image -->
+      <div id="tab-image" class="tab-pane">
+        <p class="card-subtitle">
+          Upload an image of a Code 128 barcode or an exported staff ID card to decode and verify offline.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="barcode-image-file">Select Barcode Image (PNG, JPEG, WebP)</label>
+          <input type="file" id="barcode-image-file" class="form-control" accept="image/*">
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem;">
+          <img id="upload-preview-img" src="" alt="Upload Preview" style="max-width: 320px; max-height: 240px; border-radius: var(--radius-sm); border: 1px solid var(--cyan-border); display: none; margin: 0 auto;">
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Verification Result Card & Step-by-Step Log -->
+    <section id="verification-result-section" style="display: none; margin-top: 2rem;">
+      <div id="result-card" class="result-card state-verified">
+        <div class="result-header">
+          <div id="result-icon" class="result-icon">✔</div>
+          <div>
+            <div id="result-title" class="result-title">VERIFIED — Signature Valid</div>
+            <div id="result-message" class="result-meta">
+              The digital signature is authentic and verified using the active trusted public key.
+            </div>
+          </div>
+        </div>
+
+        <!-- Extracted Staff Data Container -->
+        <div id="extracted-staff-details"></div>
+
+        <!-- Step-by-Step Verification Log -->
+        <div class="verification-log">
+          <div class="log-title">
+            <span>🔍</span> Step-by-Step Cryptographic Verification Audit Log
+          </div>
+          <ol id="verification-log-steps" class="log-steps">
+            <!-- Dynamic steps -->
+          </ol>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <span class="footer-highlight">OG STAFF</span> | Educational Security Laboratory Project | RSA Digital Signatures
+      </div>
+      <div>
+        College Security Lab Viva Mini-Project &bull; Department of Information Security
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="js/verify.js"></script>
+</body>
+</html>
